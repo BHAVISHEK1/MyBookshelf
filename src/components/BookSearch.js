@@ -7,8 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const BookSearch = () => {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [query, setQuery] = useState(localStorage.getItem('searchQuery') || '');
+  const [results, setResults] = useState(JSON.parse(localStorage.getItem('searchResults')) || []);
   const [bookshelf, setBookshelf] = useState([]);
   const [noResults, setNoResults] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,33 +21,33 @@ const BookSearch = () => {
   }, []);
 
   useEffect(() => {
-    const handleDebouncedSearch = setTimeout(() => {
-      if (query.length > 0) {
-        setLoading(true);
-        axios.get(`https://openlibrary.org/search.json?q=${query}&limit=10&page=1`)
-          .then(response => {
-            if (response.data.docs.length > 0) {
-              setResults(response.data.docs);
-              setNoResults(false);
-            } else {
-              setResults([]);
-              setNoResults(true);
-            }
-            setLoading(false);
-          })
-          .catch(error => {
-            console.error("Error fetching data from Open Library API:", error);
+    if (query.length > 0) {
+      setLoading(true);
+      axios.get(`https://openlibrary.org/search.json?q=${query}&limit=10&page=1`)
+        .then(response => {
+          if (response.data.docs.length > 0) {
+            setResults(response.data.docs);
+            setNoResults(false);
+            localStorage.setItem('searchResults', JSON.stringify(response.data.docs));
+          } else {
             setResults([]);
             setNoResults(true);
-            setLoading(false);
-          });
-      } else {
-        setResults([]);
-        setNoResults(false);
-      }
-    }, 500); 
-
-    return () => clearTimeout(handleDebouncedSearch);
+            localStorage.removeItem('searchResults');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error("Error fetching data from Open Library API:", error);
+          setResults([]);
+          setNoResults(true);
+          setLoading(false);
+          localStorage.removeItem('searchResults');
+        });
+    } else {
+      setResults([]);
+      setNoResults(false);
+      localStorage.removeItem('searchResults');
+    }
   }, [query]);
 
   const addToBookshelf = (book) => {
@@ -58,29 +58,8 @@ const BookSearch = () => {
   };
 
   const handleSearch = (searchQuery) => {
-    if (searchQuery.length > 0) {
-      setLoading(true);
-      axios.get(`https://openlibrary.org/search.json?q=${searchQuery}&limit=10&page=1`)
-        .then(response => {
-          if (response.data.docs.length > 0) {
-            setResults(response.data.docs);
-            setNoResults(false);
-          } else {
-            setResults([]);
-            setNoResults(true);
-          }
-          setLoading(false);
-        })
-        .catch(error => {
-          console.error("Error fetching data from Open Library API:", error);
-          setResults([]);
-          setNoResults(true);
-          setLoading(false);
-        });
-    } else {
-      setResults([]);
-      setNoResults(false);
-    }
+    setQuery(searchQuery);
+    localStorage.setItem('searchQuery', searchQuery);
   };
 
   return (
@@ -92,7 +71,7 @@ const BookSearch = () => {
             <input 
               type="text" 
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search for books..."
               className="search-input"
             />
@@ -135,12 +114,7 @@ const BookSearch = () => {
           </div>
         </div>
       </div>
-      <ToastContainer 
-      
-      position='top-center'
-      
-      
-      />
+      <ToastContainer position='top-center' />
     </>
   );
 };

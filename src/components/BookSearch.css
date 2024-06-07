@@ -28,14 +28,15 @@ header nav {
     border: 2px solid salmon;
     border-radius: 5px;
     padding: 5px 7px;
+    background-color: salmon;
   }
 
 
 
   .bookshelf-link:hover {
     text-decoration: none;
-    color: white;
-    background-color: salmon;
+    color: salmon;
+    background-color: white;
     font-size: 24px;
     font-weight: bold;
     border: 2px solid salmon;
@@ -64,7 +65,7 @@ header nav .form {
 }
 
 .form button[type="submit"] {
-    background-color: rgb(19, 238, 96);
+    background-color: rgb(65, 159, 236);
     color: rgb(26, 3, 3);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -112,6 +113,7 @@ header nav .form {
     color: rebeccapurple;
     border-radius: 7px;
     transition: transform 0.3s ease-in-out;
+    box-shadow: 4px 3px gray;
 }
 
 .book-cover {
@@ -237,3 +239,7 @@ header nav .form {
         height: 120px;
     }
 }
+
+
+
+
