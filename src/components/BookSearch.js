@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const BookSearch = () => {
   const [query, setQuery] = useState(localStorage.getItem('searchQuery') || '');
+  const [searchInput, setSearchInput] = useState(query);
   const [results, setResults] = useState(JSON.parse(localStorage.getItem('searchResults')) || []);
   const [bookshelf, setBookshelf] = useState([]);
   const [noResults, setNoResults] = useState(false);
@@ -21,14 +22,15 @@ const BookSearch = () => {
   }, []);
 
   useEffect(() => {
-    if (query.length > 0) {
+    if (query.trim()) {
       setLoading(true);
-      axios.get(`https://openlibrary.org/search.json?q=${query}&limit=10&page=1`)
+      axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10&page=1`)
         .then(response => {
-          if (response.data.docs.length > 0) {
-            setResults(response.data.docs);
+          const books = response.data.docs;
+          if (books.length > 0) {
+            setResults(books);
             setNoResults(false);
-            localStorage.setItem('searchResults', JSON.stringify(response.data.docs));
+            localStorage.setItem('searchResults', JSON.stringify(books));
           } else {
             setResults([]);
             setNoResults(true);
@@ -57,9 +59,9 @@ const BookSearch = () => {
     toast.success(`${book.title} added to Bookshelf!`);
   };
 
-  const handleSearch = (searchQuery) => {
-    setQuery(searchQuery);
-    localStorage.setItem('searchQuery', searchQuery);
+  const handleSearch = () => {
+    setQuery(searchInput);
+    localStorage.setItem('searchQuery', searchInput);
   };
 
   return (
@@ -70,12 +72,12 @@ const BookSearch = () => {
           <div className='form'> 
             <input 
               type="text" 
-              value={query}
-              onChange={(e) => handleSearch(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search for books..."
               className="search-input"
             />
-            <button onClick={() => handleSearch(query)} className="search-button" type='submit'>Search</button>
+            <button onClick={handleSearch} className="search-button" type='submit'>Search</button>
           </div>   
         </nav>
       </header>

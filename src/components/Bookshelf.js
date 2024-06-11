@@ -20,7 +20,7 @@ const Bookshelf = () => {
     const updatedBookshelf = bookshelf.filter(book => book.key !== key);
     setBookshelf(updatedBookshelf);
     localStorage.setItem('bookshelf', JSON.stringify(updatedBookshelf));
-    toast.success(`${title} removed from Bookshelf!`);
+    toast.error(`${title} removed from Bookshelf!`);
   };
 
   return (

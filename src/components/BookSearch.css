@@ -172,7 +172,7 @@ header nav .form {
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    animation: spin 1s linear infinite;
+   
   }
   
   @keyframes spin {
@@ -239,7 +239,48 @@ header nav .form {
         height: 120px;
     }
 }
+/* 
 
+
+
+.suggestion-box {
+    position: absolute;
+   
+    top: 11.5%;
+    left: 73.5%;
+    width:239px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+
+    border-radius: 7px;
+  }
+  
+  .suggestion-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .suggestion-box li {
+    padding: 10px;
+  }
+  
+  .suggestion-box button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .suggestion-box button:hover {
+    color: gray;
+  }
+   */
 
 
 
